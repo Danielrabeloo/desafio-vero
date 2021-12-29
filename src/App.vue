@@ -1,60 +1,53 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
-
-    <v-main>
-      <HelloWorld/>
-    </v-main>
+    <v-simple-table>
+      <template v-slot:default>
+        <thead>
+          <tr>
+            <th class="text-left">Id</th>
+            <th class="text-left">Origem</th>
+            <th class="text-left">Destino</th>
+            <th class="text-left">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in items" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>{{ item.origem }}</td>
+            <td>{{ item.destino }}</td>
+            <td>{{ item.estado }}</td>
+          </tr>
+        </tbody>
+      </template>
+    </v-simple-table>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import axios from "axios";
 
 export default {
-  name: 'App',
+  name: "App",
 
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      baseURL: "http://191.252.93.122/desafio-front-end/api/",
+      items: [],
+    };
   },
 
-  data: () => ({
-    //
-  }),
+  mounted() {
+    this.getData();
+  },
+
+  methods: {
+    getData() {
+      axios.get(this.baseURL + "/index.php").then((response) => {
+        this.items = response.data;
+      });
+
+      setTimeout(this.getData, 6000000);
+    },
+  },
 };
 </script>
